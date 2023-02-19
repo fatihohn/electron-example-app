@@ -76,12 +76,13 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
+    // titleBarStyle: 'hiddenInset',
     frame: false,
     // width: 1440,
     // height: 720,
     width: 1024,
     height: 728,
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath('icon.svg'),
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
@@ -150,7 +151,7 @@ app
     ipcMain.on('closeApp', () => {
       mainWindow?.close();
     });
-    ipcMain.on('refreshApp', () => {
+    ipcMain.on('reloadApp', () => {
       mainWindow?.reload();
     });
 

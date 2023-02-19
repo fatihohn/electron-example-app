@@ -1,12 +1,15 @@
-import icon from '../../../assets/icon.svg';
+import { Component } from 'react';
 
-export default function Lol() {
-  return (
-    <div>
-      <div className="Hello">
-        <img width="200" alt="icon" src={icon} />
-      </div>
-      <h1>League Of Legends: Off</h1>
-    </div>
-  );
+// export default function Valorant() {
+//   return (
+//     <div>
+//       <h1>Valorant: Off</h1>
+//     </div>
+//   );
+// }
+
+export default class Lol extends Component {
+  render() {
+    return <div>League of Legends: Off</div>;
+  }
 }

@@ -5,7 +5,7 @@ export type Channels =
   | 'app-version'
   | 'minimizeApp'
   | 'maximizeApp'
-  | 'refreshApp'
+  | 'reloadApp'
   | 'closeApp';
 
 contextBridge.exposeInMainWorld('electron', {
