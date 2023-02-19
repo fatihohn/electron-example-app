@@ -1,10 +1,10 @@
 // TODO. addEventListener => on game running
 import { Component } from 'react';
 
-// export default function Valorant() {
+// export default function Main() {
 //   return (
 //     <div>
-//       <h1>Valorant: Off</h1>
+//       <h1>Main process running</h1>
 //     </div>
 //   );
 // }

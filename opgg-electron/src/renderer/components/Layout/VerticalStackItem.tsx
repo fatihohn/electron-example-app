@@ -15,7 +15,10 @@ export default class VerticalStackItem extends Component<VerticalStackItemProps>
   render() {
     const { children } = this.props;
     return (
-      <div className="flex justify-center items-center" {...this.props}>
+      <div
+        className="flex justify-center items-center w-[60px] h-[60px]"
+        {...this.props}
+      >
         {children}
       </div>
     );

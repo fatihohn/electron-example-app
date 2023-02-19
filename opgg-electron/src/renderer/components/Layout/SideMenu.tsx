@@ -9,10 +9,14 @@ import OpggIcon from '../../../img/icon-opgg.svg';
 interface DivProps extends HTMLAttributes<HTMLDivElement> {}
 
 export default class SideMenu extends Component<DivProps> {
+  inactiveLinkClassName = 'inactive-btn';
+
+  activeLinkClassName = `active-btn after:content-[''] after:text-[#000] after:w-[4px] after:h-[24px] after:rounded-l-[8px] after:bg-[#000] after:absolute after:right-[-17px] after:top-0 after:z-0 after:ml-[14px]`;
+
   render() {
     return (
-      <div className="box-side-menu flex-1 w-[60px]">
-        <div className="box-vertical-stack">
+      <div className="box-side-menu flex-1 max-w-[60px] w-[60px] border-r border-[#202530]">
+        <div className="box-vertical-stack flex flex-col gap-[24px]">
           <VerticalStackItem
             style={{
               backgroundColor: '#6c61ff',
@@ -30,13 +34,23 @@ export default class SideMenu extends Component<DivProps> {
           </VerticalStackItem>
 
           <VerticalStackItem>
-            <SideMenuItemInnerLink to="/lol">
+            <SideMenuItemInnerLink
+              to="/lol"
+              className={({ isActive }) =>
+                isActive ? this.activeLinkClassName : this.inactiveLinkClassName
+              }
+            >
               <img src={LeagueoflegendsIcon} alt="league of legends" />
             </SideMenuItemInnerLink>
           </VerticalStackItem>
 
           <VerticalStackItem>
-            <SideMenuItemInnerLink to="/valorant">
+            <SideMenuItemInnerLink
+              to="/valorant"
+              className={({ isActive }) =>
+                isActive ? this.activeLinkClassName : this.inactiveLinkClassName
+              }
+            >
               <img src={ValorantIcon} alt="valorant" />
             </SideMenuItemInnerLink>
           </VerticalStackItem>

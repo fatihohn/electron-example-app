@@ -10,12 +10,6 @@ body {
   position: relative;
   color: white;
   height: 100vh;
-  background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
-  );
   background: #0c0f13;
   font-family: sans-serif;
   overflow-y: hidden;
@@ -27,11 +21,8 @@ body {
 
 button {
   background-color: transparent;
-  /* padding: 10px 20px; */
-  /* border-radius: 10px; */
   border: none;
   appearance: none;
-  /* font-size: 1.3rem; */
   transition: all ease-in 0.1s;
   cursor: pointer;
   opacity: 0.9;
@@ -59,14 +50,15 @@ a:hover {
   text-decoration: none;
 }
 
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
 .titlebar {
   -webkit-user-select: none;
   -webkit-app-region: drag;
+}
+
+.inactive-btn {
+  filter: invert(36%) sepia(6%) saturate(1433%) hue-rotate(180deg) brightness(85%) contrast(80%); /* #525A68 */
+}
+
+.active-btn {
+  filter: invert(69%) sepia(81%) saturate(7453%) hue-rotate(232deg) brightness(107%) contrast(101%); /* #6C61FF */
 }

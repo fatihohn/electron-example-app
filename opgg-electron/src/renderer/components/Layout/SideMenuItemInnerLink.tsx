@@ -1,13 +1,11 @@
 import { Component, PropsWithChildren, ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, NavLinkProps } from 'react-router-dom';
+import ActiveIndicator from './ActiveIndicator';
 
-type SideMenuItemProps = {
+type SideMenuItemInnerLinkProps = {
   children: ReactNode;
-};
-
-type SideMenuItemInnerLinkProps = SideMenuItemProps & {
   to: string;
-};
+} & NavLinkProps;
 
 // TODO. button style
 // TODO. link style
@@ -34,6 +32,10 @@ export default class SideMenuItemInnerLink extends Component<SideMenuItemInnerLi
 
   render() {
     const { children } = this.props;
-    return <NavLink {...this.props}>{children}</NavLink>;
+    return (
+      <NavLink {...this.props}>{children}</NavLink>
+      // <NavLink {...this.props}}>{children}</NavLink>
+      // <NavLink {...this.props}>{children}</NavLink>
+    );
   }
 }

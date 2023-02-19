@@ -36,9 +36,7 @@ export default class Layout extends Component<LayoutProps> {
         <Titlebar />
         <div className="w-screen h-[calc(100vh-36px)] top-0 flex flex-row">
           <SideMenu />
-          <div className="box-board border-t border-[#202530] grow">
-            {children}
-          </div>
+          <div className="box-board grow z-10">{children}</div>
         </div>
       </div>
     );
