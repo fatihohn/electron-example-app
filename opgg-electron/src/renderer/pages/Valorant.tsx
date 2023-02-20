@@ -44,6 +44,9 @@ export default function Valorant() {
 
     // SET GAME STATUS
     window.electron.ipcRenderer.on('lolRunning', () => {
+      if (!isLolRunning) {
+        setIsNavIntent(false);
+      }
       setIsLolRunning(true);
     });
     window.electron.ipcRenderer.on('lolStopped', () => {
