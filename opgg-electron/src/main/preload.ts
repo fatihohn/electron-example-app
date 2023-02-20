@@ -7,10 +7,9 @@ export type Channels =
   | 'maximizeApp'
   | 'reloadApp'
   | 'closeApp'
-  | 'lolCheck'
+  | 'gameCheck'
   | 'lolStopped'
   | 'lolRunning'
-  | 'valorantCheck'
   | 'valorantStopped'
   | 'valorantRunning';
 

@@ -16,23 +16,15 @@ export default function Lol() {
     setIsValorantRunning,
   } = useGame();
 
-  let lolCheckInterval: Interval = null;
-  let valorantCheckInterval: Interval = null;
+  let gameCheckInterval: Interval = null;
 
   const recursiveCheck = () => {
     if (location.pathname !== '/lol') return;
-    if (lolCheckInterval) clearInterval(lolCheckInterval);
-    if (valorantCheckInterval) clearInterval(valorantCheckInterval);
+    if (gameCheckInterval) clearInterval(gameCheckInterval);
 
-    lolCheckInterval = setInterval(() => {
-      console.log(`${location.pathname} ${Date.now()} - Checking lol`);
-      window.electron.ipcRenderer.sendMessage(`lolCheck`, [`lolCheck`]);
-    }, 1000);
-    valorantCheckInterval = setInterval(() => {
-      console.log(`${location.pathname} ${Date.now()} - Checking valorant`);
-      window.electron.ipcRenderer.sendMessage(`valorantCheck`, [
-        `valorantCheck`,
-      ]);
+    gameCheckInterval = setInterval(() => {
+      console.log(`${location.pathname} ${Date.now()} - Checking games`);
+      window.electron.ipcRenderer.sendMessage(`gameCheck`, [`gameCheck`]);
     }, 1000);
   };
 
@@ -62,8 +54,7 @@ export default function Lol() {
 
     return () => {
       console.log('unmount');
-      if (lolCheckInterval) clearInterval(lolCheckInterval);
-      if (valorantCheckInterval) clearInterval(valorantCheckInterval);
+      if (gameCheckInterval) clearInterval(gameCheckInterval);
     };
   }, []);
 

@@ -52,9 +52,6 @@ const configuration: webpack.Configuration = {
       // url: require.resolve("url/"),
       path: require.resolve("path-browserify"),
       https: false,
-      // https: require.resolve("https-browserify"),
-      // buffer: require.resolve("buffer/"),
-      // process: require.resolve("process/browser"),
     },
   },
 

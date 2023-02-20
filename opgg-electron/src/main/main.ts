@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import Valorant from '@liamcottle/valorant.js';
 
 class AppUpdater {
   constructor() {
@@ -166,37 +167,51 @@ app
     ipcMain.on('reloadApp', () => {
       mainWindow?.reload();
     });
-    ipcMain.on('lolCheck', () => {
+    ipcMain.on('gameCheck', () => {
       try {
-        const request = net.request(
-          'https://127.0.0.1:2999/liveclientdata/gamestats'
-        );
+        type game = {
+          name: string;
+          alias: string;
+        }
+        const games: game[] = [{ name: 'valorant', alias: 'valorant'}, { name: 'league_of_legends', alias: 'lol'}];
+        const client = Valorant.LocalRiotClientAPI.initFromLockFile();
+
+        if (!client) return;
+        const { ip, port, username, password } = client;
+        const uri = `https://${ip}:${port}/chat/v4/presences`;
+        const request = net.request(uri);
         request.on('response', (response) => {
-          console.log(`STATUS: ${response.statusCode}`);
-          console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
           response.on('data', (chunk) => {
-            console.log(`BODY: ${chunk}`);
-            if (typeof chunk === 'object') {
-              mainWindow?.webContents.send('lolRunning', chunk.toString());
-            }
+            const str = chunk.toString();
+            const obj = JSON.parse(str);
+            const presences = obj.presences
+            const products = presences?.map(item => item.product) ?? [];
+            console.log(products);
+
+            games.forEach(game => {
+              if (products.includes(game.name)) {
+                mainWindow?.webContents.send(`${game.alias}Running`);
+              } else {
+                mainWindow?.webContents.send(`${game.alias}Stopped`);
+              }
+            });
           });
           response.on('end', () => {
             console.log('No more data in response.');
           });
         });
+        request.on('login', (authInfo, callback) => {
+          callback(username, password);
+        })
         request.on('error', (error) => {
+          mainWindow?.webContents.send('valorantStopped');
           mainWindow?.webContents.send('lolStopped');
           console.log(error);
         });
         request.end();
       } catch (e) {
-        console.log(e);
-      }
-    });
-    ipcMain.on('valorantCheck', () => {
-      try {
-
-      } catch (e) {
+        mainWindow?.webContents.send('valorantStopped');
+        mainWindow?.webContents.send('lolStopped');
         console.log(e);
       }
     });
