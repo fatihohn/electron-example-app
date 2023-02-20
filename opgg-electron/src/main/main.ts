@@ -9,9 +9,6 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-// import https from 'https';
-// import axios from 'axios';
-// import valorant from '@liamcottle/valorant.js';
 import { app, BrowserWindow, shell, ipcMain, net } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
