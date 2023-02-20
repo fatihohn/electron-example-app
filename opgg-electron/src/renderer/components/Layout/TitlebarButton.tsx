@@ -1,21 +1,18 @@
-import React from 'react';
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+import { ButtonHTMLAttributes, ReactNode, Component } from 'react';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 type TitlebarButtonProps = {
-  message: 'minimizeApp' | 'maximizeApp' | 'closeApp' | 'refreshApp';
+  message: 'minimizeApp' | 'maximizeApp' | 'closeApp' | 'reloadApp';
+  children: ReactNode | Component;
 } & ButtonProps;
 
-export default function TitlebarButton({
-  message,
-  children,
-  ...props
-}: TitlebarButtonProps) {
+export default function TitlebarButton(props: TitlebarButtonProps) {
+  const { children, message } = props;
   return (
     <button
       type="button"
-      // display="flex"
-      // justifyContent="center"
-      // alignItems="center"
+      className="flex justify-center items-center w-[24px] h-[24px]"
       onClick={() => {
         window.electron.ipcRenderer.sendMessage(message, [message]);
       }}

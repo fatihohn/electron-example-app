@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /*
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
@@ -6,31 +10,23 @@ body {
   position: relative;
   color: white;
   height: 100vh;
-  background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
-  );
+  background: #0c0f13;
   font-family: sans-serif;
   overflow-y: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0;
 }
 
 button {
-  background-color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
+  background-color: transparent;
   border: none;
   appearance: none;
-  font-size: 1.3rem;
-  box-shadow: 0px 8px 28px -6px rgba(24, 39, 75, 0.12),
-    0px 18px 88px -4px rgba(24, 39, 75, 0.14);
   transition: all ease-in 0.1s;
   cursor: pointer;
   opacity: 0.9;
+  -webkit-app-region: no-drag;
 }
 
 button:hover {
@@ -54,9 +50,15 @@ a:hover {
   text-decoration: none;
 }
 
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
+.titlebar {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+.inactive-btn {
+  filter: invert(36%) sepia(6%) saturate(1433%) hue-rotate(180deg) brightness(85%) contrast(80%); /* #525A68 */
+}
+
+.active-btn {
+  filter: invert(69%) sepia(81%) saturate(7453%) hue-rotate(232deg) brightness(107%) contrast(101%); /* #6C61FF */
 }

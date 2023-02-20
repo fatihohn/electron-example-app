@@ -48,12 +48,14 @@ const configuration: webpack.Configuration = {
     // There is no need to add aliases here, the paths in tsconfig get mirrored
     plugins: [new TsconfigPathsPlugins()],
     // // TODO. Check validkty -> Added fallback due to this tutorial: https://www.codiga.io/blog/build-electron-typescript-react-app/
-    // fallback: {
-    //   url: require.resolve("url/"),
-    //   path: require.resolve("path-browserify"),
-    //   buffer: require.resolve("buffer/"),
-    //   process: require.resolve("process/browser"),
-    // },
+    fallback: {
+      // url: require.resolve("url/"),
+      path: require.resolve("path-browserify"),
+      https: false,
+      // https: require.resolve("https-browserify"),
+      // buffer: require.resolve("buffer/"),
+      // process: require.resolve("process/browser"),
+    },
   },
 
   plugins: [

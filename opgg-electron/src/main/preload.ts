@@ -1,12 +1,18 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer, IpcRendererEvent, net } from 'electron';
 
 export type Channels =
   | 'ipc-example'
   | 'app-version'
   | 'minimizeApp'
   | 'maximizeApp'
-  | 'refreshApp'
-  | 'closeApp';
+  | 'reloadApp'
+  | 'closeApp'
+  | 'lolCheck'
+  | 'lolStopped'
+  | 'lolRunning'
+  | 'valorantCheck'
+  | 'valorantStopped'
+  | 'valorantRunning';
 
 contextBridge.exposeInMainWorld('electron', {
   isMac: process.platform === 'darwin',
@@ -25,4 +31,5 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
   },
+  handleCounter: (callback: any) => ipcRenderer.on('update-counter', callback),
 });

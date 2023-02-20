@@ -1,65 +1,69 @@
+import VerticalStackItem from './VerticalStackItem';
+import SideMenuItemButton from './SideMenuItemButton';
+import SideMenuItemInnerLink from './SideMenuItemInnerLink';
 import LeagueoflegendsIcon from '../../../img/icon-leagueoflegends.svg';
 import ValorantIcon from '../../../img/icon-valorant.svg';
 import OpggIcon from '../../../img/icon-opgg.svg';
+import { HIGHLIGHT_COLOR } from '../../const';
 
-import { SideMenuItemButton, SideMenuItemInnerLink } from './SideMenuItems';
-
-// type SideMenuProps = {
-//   openLoginModal: () => void;
-// };
-
-// TODO. useState -> activeTab
-
-// const logoStyles: IconProps = {
-//   width: '32px',
-//   height: '32px',
-//   viewBox: '0 0 32 32',
-//   fill: 'none',
-//   xmlns: 'http://www.w3.org/2000/svg',
-// };
-
-// const iconStyles: IconProps = {
-//   width: '24px',
-//   height: '24px',
-//   viewBox: '0 0 24 24',
-//   fill: 'none',
-//   xmlns: 'http://www.w3.org/2000/svg',
-// };
-
-// const hoverStyles: IconProps = {
-//   position: 'absolute',
-//   opacity: 0,
-//   transition: 'ease-in-out',
-//   transitionDuration: '100ms',
-//   _groupHover: { opacity: 1 },
-// };
-
-function openOpggWithDefaultBrowser() {
-  // TODO. open https://op.gg with OS default browser
-  // eslint-disable-next-line no-alert
-  alert('https://op.gg');
-  return null;
-}
 export default function SideMenu() {
+  const inactiveLinkClassName = 'inactive-btn';
+
+  const activeLinkClassName = `
+    active-btn
+    after:content-['']
+    after:text-[#000]
+    after:w-[4px]
+    after:h-[24px]
+    after:rounded-l-[8px]
+    after:bg-[#000]
+    after:absolute
+    after:right-[-17px]
+    after:top-0
+    after:z-0
+    after:ml-[14px]
+  `;
+
   return (
-    <div className="box-side-menu">
-      <div className="box-vertical-stack">
-        <div className="box-vertical-stack-item">
-          <SideMenuItemButton onClick={openOpggWithDefaultBrowser}>
+    <div className="box-side-menu flex-1 max-w-[60px] w-[60px] border-r border-[#202530]">
+      <div className="box-vertical-stack flex flex-col gap-[24px]">
+        <VerticalStackItem
+          style={{
+            backgroundColor: HIGHLIGHT_COLOR,
+          }}
+        >
+          <SideMenuItemButton
+            onClick={() => {
+              window.open('https://op.gg', '_blank');
+            }}
+          >
             <img src={OpggIcon} alt="op.gg" />
           </SideMenuItemButton>
-        </div>
+        </VerticalStackItem>
 
-        <div className="box-vertical-stack-item">
-          <SideMenuItemInnerLink to="/lol">
+        <VerticalStackItem>
+          <SideMenuItemInnerLink
+            to="/lol"
+            state={{ isNavIntent: true }}
+            className={({ isActive }) =>
+              isActive ? activeLinkClassName : inactiveLinkClassName
+            }
+          >
             <img src={LeagueoflegendsIcon} alt="league of legends" />
           </SideMenuItemInnerLink>
-        </div>
-        <div className="box-vertical-stack-item">
-          <SideMenuItemInnerLink to="/valorant">
+        </VerticalStackItem>
+
+        <VerticalStackItem>
+          <SideMenuItemInnerLink
+            to="/valorant"
+            state={{ isNavIntent: true }}
+            className={({ isActive }) =>
+              isActive ? activeLinkClassName : inactiveLinkClassName
+            }
+          >
             <img src={ValorantIcon} alt="valorant" />
           </SideMenuItemInnerLink>
-        </div>
+        </VerticalStackItem>
       </div>
     </div>
   );

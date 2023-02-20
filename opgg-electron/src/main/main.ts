@@ -9,7 +9,10 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+// import https from 'https';
+// import axios from 'axios';
+// import valorant from '@liamcottle/valorant.js';
+import { app, BrowserWindow, shell, ipcMain, net } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -76,13 +79,16 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
+    // titleBarStyle: 'hiddenInset',
     frame: false,
     // width: 1440,
     // height: 720,
     width: 1024,
     height: 728,
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath('icon.svg'),
     webPreferences: {
+      // nodeIntegration: true,
+      // contextIsolation: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
@@ -115,6 +121,14 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
+  mainWindow.webContents.on(
+    'new-window',
+    (event: { preventDefault: () => void }, url: string) => {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
+  );
+
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
@@ -132,6 +146,8 @@ app.on('window-all-closed', () => {
   }
 });
 
+app.commandLine.appendSwitch('ignore-certificate-errors');
+app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
 app
   .whenReady()
   .then(() => {
@@ -150,8 +166,42 @@ app
     ipcMain.on('closeApp', () => {
       mainWindow?.close();
     });
-    ipcMain.on('refreshApp', () => {
+    ipcMain.on('reloadApp', () => {
       mainWindow?.reload();
+    });
+    ipcMain.on('lolCheck', () => {
+      try {
+        const request = net.request(
+          'https://127.0.0.1:2999/liveclientdata/gamestats'
+        );
+        request.on('response', (response) => {
+          console.log(`STATUS: ${response.statusCode}`);
+          console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+          response.on('data', (chunk) => {
+            console.log(`BODY: ${chunk}`);
+            if (typeof chunk === 'object') {
+              mainWindow?.webContents.send('lolRunning', chunk.toString());
+            }
+          });
+          response.on('end', () => {
+            console.log('No more data in response.');
+          });
+        });
+        request.on('error', (error) => {
+          mainWindow?.webContents.send('lolStopped');
+          console.log(error);
+        });
+        request.end();
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    ipcMain.on('valorantCheck', () => {
+      try {
+
+      } catch (e) {
+        console.log(e);
+      }
     });
 
     app.on('activate', () => {
