@@ -48,6 +48,9 @@ export default function Lol() {
       setIsLolRunning(false);
     });
     window.electron.ipcRenderer.on('valorantRunning', () => {
+      if (!isValorantRunning) {
+        setIsNavIntent(false);
+      }
       setIsValorantRunning(true);
     });
     window.electron.ipcRenderer.on('valorantStopped', () => {
