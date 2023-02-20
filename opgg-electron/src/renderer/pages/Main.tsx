@@ -12,8 +12,7 @@ export default function Main() {
   } = useGame();
 
   useEffect(() => {
-    window.electron.ipcRenderer.sendMessage('lolCheck', ['lolCheck']);
-    window.electron.ipcRenderer.sendMessage('valorantCheck', ['valorantCheck']);
+    window.electron.ipcRenderer.sendMessage('gameCheck', ['gameCheck']);
     window.electron.ipcRenderer.on('lolRunning', () => {
       setIsLolRunning(true);
     });

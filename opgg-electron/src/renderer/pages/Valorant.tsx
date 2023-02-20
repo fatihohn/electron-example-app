@@ -18,23 +18,15 @@ export default function Valorant() {
     setIsValorantRunning,
   } = useGame();
 
-  let lolCheckInterval: Interval = null;
-  let valorantCheckInterval: Interval = null;
+  let gameCheckInterval: Interval = null;
 
   const recursiveCheck = () => {
     if (location.pathname !== '/valorant') return;
-    if (lolCheckInterval) clearInterval(lolCheckInterval);
-    if (valorantCheckInterval) clearInterval(valorantCheckInterval);
+    if (gameCheckInterval) clearInterval(gameCheckInterval);
 
-    lolCheckInterval = setInterval(() => {
-      console.log(`${location.pathname} ${Date.now()} - Checking lol`);
-      window.electron.ipcRenderer.sendMessage(`lolCheck`, [`lolCheck`]);
-    }, 1000);
-    valorantCheckInterval = setInterval(() => {
-      console.log(`${location.pathname} ${Date.now()} - Checking valorant`);
-      window.electron.ipcRenderer.sendMessage(`valorantCheck`, [
-        `valorantCheck`,
-      ]);
+    gameCheckInterval = setInterval(() => {
+      console.log(`${location.pathname} ${Date.now()} - Checking games`);
+      window.electron.ipcRenderer.sendMessage(`gameCheck`, [`gameCheck`]);
     }, 1000);
   };
 
@@ -64,8 +56,7 @@ export default function Valorant() {
 
     return () => {
       console.log('unmount');
-      if (lolCheckInterval) clearInterval(lolCheckInterval);
-      if (valorantCheckInterval) clearInterval(valorantCheckInterval);
+      if (gameCheckInterval) clearInterval(gameCheckInterval);
     };
   }, []);
 
@@ -79,26 +70,3 @@ export default function Valorant() {
 
   return <div>Valorant: {isValorantRunning ? 'On' : 'Off'}</div>;
 }
-
-/**
- * running games case
- * 1. NONE
- *  - side menu tab switch: true
- *  - auto switch to lol: true
- *  - auto switch to valorant: true
- * 2. LOL
- *  - side menu tab switch: true
- *  - auto switch to lol: false
- *    => on lol restart: true
- *  - auto switch to valorant: true
- * 3. VALORANT
- *  - side menu tab switch: true
- *  - auto switch to lol: true
- *  - auto switch to valorant: false
- *    => on valorant restart: true
- * 4. LOL & VALORANT
- *  - side menu tab switch: true
- *  - auto switch to lol: false
- *  - auto switch to valorant: false
- *    => on valorant restart: true
- */
