@@ -1,26 +1,19 @@
-import { ReactNode, Component, PropsWithChildren, HTMLAttributes } from 'react';
+import { ReactNode, Component, HTMLAttributes } from 'react';
 
 interface DivProps extends HTMLAttributes<HTMLDivElement> {}
 
 type VerticalStackItemProps = {
-  children: ReactNode;
+  children: ReactNode | Component;
 } & DivProps;
 
-export default class VerticalStackItem extends Component<VerticalStackItemProps> {
-  constructor(props: PropsWithChildren<VerticalStackItemProps>) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    const { children } = this.props;
-    return (
-      <div
-        className="flex justify-center items-center w-[60px] h-[60px]"
-        {...this.props}
-      >
-        {children}
-      </div>
-    );
-  }
+export default function VerticalStackItem(props: VerticalStackItemProps) {
+  const { children } = props;
+  return (
+    <div
+      className="flex justify-center items-center w-[60px] h-[60px]"
+      {...props}
+    >
+      {children}
+    </div>
+  );
 }
