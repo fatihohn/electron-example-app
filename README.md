@@ -5,10 +5,6 @@
 
 <a href="https://github.com/fatihohn/electron-example-app/raw/main/OPGGDesktopTest%200.0.1.exe">Download</a>
 
-### For Mac
-
-<a href="./OPGGDesktopTest 0.0.1.exe">Download</a>
-
 ### Commands
 
 - Install : `npm install`
