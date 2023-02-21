@@ -166,21 +166,21 @@ app
             'https://127.0.0.1:2999/liveclientdata/gamestats'
           );
           request.on('response', (response) => {
-            console.log(`STATUS: ${response.statusCode}`);
-            console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+            // console.log(`STATUS: ${response.statusCode}`);
+            // console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
             response.on('data', (chunk) => {
-              console.log(`BODY: ${chunk}`);
+              // console.log(`BODY: ${chunk}`);
               if (typeof chunk === 'object') {
                 mainWindow?.webContents.send('lolRunning', chunk.toString());
               }
             });
             response.on('end', () => {
-              console.log('No more data in response.');
+              // console.log('No more data in response.');
             });
           });
           request.on('error', (error) => {
             mainWindow?.webContents.send('lolStopped');
-            console.log(error);
+            // console.log(error);
           });
           request.end();
         }
@@ -205,11 +205,16 @@ app
               const str = chunk.toString();
               const obj = JSON.parse(str);
               const { presences } = obj;
-              const products =
-                presences?.map((item: { product: any }) => item.product) ?? [];
+              const runningGames =
+                presences?.map((item: { product: any, state: string }) => {
+                  return {
+                    product: item.product,
+                    state: item.state,
+                  }
+                }) ?? [];
 
               games.forEach((item) => {
-                if (products.includes(item.name)) {
+                if (runningGames.find((runningGame: { state: string; product: string; }) => runningGame?.product === item.name && runningGame.state !== 'away')) {
                   mainWindow?.webContents.send(`${item.alias}Running`);
                 } else {
                   mainWindow?.webContents.send(`${item.alias}Stopped`);
@@ -217,7 +222,7 @@ app
               });
             });
             response.on('end', () => {
-              console.log('No more data in response.');
+              // console.log('No more data in response.');
             });
           });
           request.on('login', (_authInfo, callback) => {
