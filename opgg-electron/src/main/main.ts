@@ -233,7 +233,6 @@ app
       } catch (e) {
         mainWindow?.webContents.send('valorantStopped');
         mainWindow?.webContents.send('lolStopped');
-        console.log(e);
       }
     });
 
