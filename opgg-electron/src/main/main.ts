@@ -12,9 +12,9 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain, net } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import Valorant from '@liamcottle/valorant.js';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import Valorant from '@liamcottle/valorant.js';
 
 class AppUpdater {
   constructor() {
@@ -77,16 +77,11 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
-    // titleBarStyle: 'hiddenInset',
     frame: false,
-    // width: 1440,
-    // height: 720,
-    width: 1024,
-    height: 728,
+    width: 1440,
+    height: 720,
     icon: getAssetPath('icon.svg'),
     webPreferences: {
-      // nodeIntegration: true,
-      // contextIsolation: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
@@ -132,10 +127,6 @@ const createWindow = async () => {
   new AppUpdater();
 };
 
-/**
- * TODO. Add event listeners...
- */
-
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -169,46 +160,76 @@ app
     });
     ipcMain.on('gameCheck', () => {
       try {
-        type game = {
-          name: string;
-          alias: string;
-        }
-        const games: game[] = [{ name: 'valorant', alias: 'valorant'}, { name: 'league_of_legends', alias: 'lol'}];
-        const client = Valorant.LocalRiotClientAPI.initFromLockFile();
-
-        if (!client) return;
-        const { ip, port, username, password } = client;
-        const uri = `https://${ip}:${port}/chat/v4/presences`;
-        const request = net.request(uri);
-        request.on('response', (response) => {
-          response.on('data', (chunk) => {
-            const str = chunk.toString();
-            const obj = JSON.parse(str);
-            const presences = obj.presences
-            const products = presences?.map(item => item.product) ?? [];
-            console.log(products);
-
-            games.forEach(game => {
-              if (products.includes(game.name)) {
-                mainWindow?.webContents.send(`${game.alias}Running`);
-              } else {
-                mainWindow?.webContents.send(`${game.alias}Stopped`);
+        // MAC
+        if (process.platform === 'darwin') {
+          const request = net.request(
+            'https://127.0.0.1:2999/liveclientdata/gamestats'
+          );
+          request.on('response', (response) => {
+            console.log(`STATUS: ${response.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+            response.on('data', (chunk) => {
+              console.log(`BODY: ${chunk}`);
+              if (typeof chunk === 'object') {
+                mainWindow?.webContents.send('lolRunning', chunk.toString());
               }
             });
+            response.on('end', () => {
+              console.log('No more data in response.');
+            });
           });
-          response.on('end', () => {
-            console.log('No more data in response.');
+          request.on('error', (error) => {
+            mainWindow?.webContents.send('lolStopped');
+            console.log(error);
           });
-        });
-        request.on('login', (authInfo, callback) => {
-          callback(username, password);
-        })
-        request.on('error', (error) => {
-          mainWindow?.webContents.send('valorantStopped');
-          mainWindow?.webContents.send('lolStopped');
-          console.log(error);
-        });
-        request.end();
+          request.end();
+        }
+        // WINDOWS
+        else {
+          type game = {
+            name: string;
+            alias: string;
+          };
+          const games: game[] = [
+            { name: 'valorant', alias: 'valorant' },
+            { name: 'league_of_legends', alias: 'lol' },
+          ];
+          const client = Valorant.LocalRiotClientAPI.initFromLockFile();
+
+          if (!client) return;
+          const { ip, port, username, password } = client;
+          const uri = `https://${ip}:${port}/chat/v4/presences`;
+          const request = net.request(uri);
+          request.on('response', (response) => {
+            response.on('data', (chunk) => {
+              const str = chunk.toString();
+              const obj = JSON.parse(str);
+              const { presences } = obj;
+              const products =
+                presences?.map((item: { product: any }) => item.product) ?? [];
+
+              games.forEach((item) => {
+                if (products.includes(item.name)) {
+                  mainWindow?.webContents.send(`${item.alias}Running`);
+                } else {
+                  mainWindow?.webContents.send(`${item.alias}Stopped`);
+                }
+              });
+            });
+            response.on('end', () => {
+              console.log('No more data in response.');
+            });
+          });
+          request.on('login', (_authInfo, callback) => {
+            callback(username, password);
+          });
+          request.on('error', (error) => {
+            mainWindow?.webContents.send('valorantStopped');
+            mainWindow?.webContents.send('lolStopped');
+            console.log(error);
+          });
+          request.end();
+        }
       } catch (e) {
         mainWindow?.webContents.send('valorantStopped');
         mainWindow?.webContents.send('lolStopped');

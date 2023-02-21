@@ -55,7 +55,6 @@ export default function Valorant() {
     });
 
     return () => {
-      console.log('unmount');
       if (gameCheckInterval) clearInterval(gameCheckInterval);
     };
   }, []);

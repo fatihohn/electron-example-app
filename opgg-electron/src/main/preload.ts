@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { contextBridge, ipcRenderer, IpcRendererEvent, net } from 'electron';
 
 export type Channels =

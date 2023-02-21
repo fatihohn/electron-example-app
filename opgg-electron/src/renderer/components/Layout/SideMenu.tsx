@@ -4,7 +4,7 @@ import SideMenuItemInnerLink from './SideMenuItemInnerLink';
 import LeagueoflegendsIcon from '../../../img/icon-leagueoflegends.svg';
 import ValorantIcon from '../../../img/icon-valorant.svg';
 import OpggIcon from '../../../img/icon-opgg.svg';
-import { HIGHLIGHT_COLOR } from '../../const';
+import { HIGHLIGHT_COLOR, OP_GG_LINK } from '../../const';
 
 export default function SideMenu() {
   const inactiveLinkClassName = 'inactive-btn';
@@ -34,7 +34,7 @@ export default function SideMenu() {
         >
           <SideMenuItemButton
             onClick={() => {
-              window.open('https://op.gg', '_blank');
+              window.open(OP_GG_LINK, '_blank');
             }}
           >
             <img src={OpggIcon} alt="op.gg" />
