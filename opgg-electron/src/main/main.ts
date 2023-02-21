@@ -127,6 +127,16 @@ const createWindow = async () => {
   new AppUpdater();
 };
 
+type game = {
+  name: string;
+  alias: string;
+};
+
+const games: game[] = [
+  { name: 'valorant', alias: 'valorant' },
+  { name: 'league_of_legends', alias: 'lol' },
+];
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -160,47 +170,42 @@ app
     });
     ipcMain.on('gameCheck', () => {
       try {
-        // MAC
+        // MAC: league_of_legends
         if (process.platform === 'darwin') {
           const request = net.request(
             'https://127.0.0.1:2999/liveclientdata/gamestats'
           );
+
           request.on('response', (response) => {
-            // console.log(`STATUS: ${response.statusCode}`);
-            // console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+            console.log(`STATUS: ${response.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
             response.on('data', (chunk) => {
-              // console.log(`BODY: ${chunk}`);
               if (typeof chunk === 'object') {
-                mainWindow?.webContents.send('lolRunning', chunk.toString());
+                mainWindow?.webContents.send('lolRunning');
               }
             });
             response.on('end', () => {
-              // console.log('No more data in response.');
+              console.log('No more data in response.');
             });
           });
           request.on('error', (error) => {
             mainWindow?.webContents.send('lolStopped');
-            // console.log(error);
+            console.log(error);
           });
           request.end();
         }
-        // WINDOWS
+        // WINDOWS: league_of_legends & Valorant
         else {
-          type game = {
-            name: string;
-            alias: string;
-          };
-          const games: game[] = [
-            { name: 'valorant', alias: 'valorant' },
-            { name: 'league_of_legends', alias: 'lol' },
-          ];
           const client = Valorant.LocalRiotClientAPI.initFromLockFile();
 
           if (!client) return;
+
           const { ip, port, username, password } = client;
-          const uri = `https://${ip}:${port}/chat/v4/presences`;
-          const request = net.request(uri);
+          const request = net.request(`https://${ip}:${port}/chat/v4/presences`);
+
           request.on('response', (response) => {
+            console.log(`STATUS: ${response.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
             response.on('data', (chunk) => {
               const str = chunk.toString();
               const obj = JSON.parse(str);
@@ -222,7 +227,7 @@ app
               });
             });
             response.on('end', () => {
-              // console.log('No more data in response.');
+              console.log('No more data in response.');
             });
           });
           request.on('login', (_authInfo, callback) => {

@@ -53,7 +53,6 @@ export default function Lol() {
     });
 
     return () => {
-      console.log('unmount');
       if (gameCheckInterval) clearInterval(gameCheckInterval);
     };
   }, []);

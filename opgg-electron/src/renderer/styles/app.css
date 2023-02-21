@@ -57,9 +57,9 @@ a:hover {
 }
 
 .inactive-btn {
-  filter: invert(36%) sepia(6%) saturate(1433%) hue-rotate(180deg) brightness(85%) contrast(80%); /* #525A68 */
+  filter: invert(36%) sepia(6%) saturate(1433%) hue-rotate(180deg) brightness(85%) contrast(80%); /* #000 -> #525A68 */
 }
 
 .active-btn {
-  filter: invert(69%) sepia(81%) saturate(7453%) hue-rotate(232deg) brightness(107%) contrast(101%); /* #6C61FF */
+  filter: invert(69%) sepia(81%) saturate(7453%) hue-rotate(232deg) brightness(107%) contrast(101%); /* #000 -> #6C61FF */
 }
